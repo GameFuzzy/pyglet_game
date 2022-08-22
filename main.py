@@ -1,9 +1,11 @@
 from pyglet.gl import *
-from pyglet.window import Window
+from pyglet.window import Window, key
 from player import Player
+from portal import Portal
 from projectile import Projectile
 from resources import sheet_image, cursor_image
 from tile import Tile
+from util import load_map, reset_map, change_map
 
 glEnable(GL_TEXTURE_2D)
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
@@ -25,30 +27,13 @@ for handler in player.event_handlers:
 
 foreground = pyglet.graphics.Batch()
 
-
-def load_map(path):
-    filename = path + ".map"
-    with open(filename, "r") as fp:
-        return list(map(lambda line: line[:-1].split(','), reversed(fp.read().splitlines())))
-
+current_level = 1
 
 game_map = load_map('level1')
 
 tiles = pyglet.image.ImageGrid(sheet_image, rows=8, columns=17)
 
-y = 0
-for row in game_map:
-    x = 0
-    for tile in row:
-        if int(tile):
-            sheet_pos = int(tile[:len(tile) // 2]), int(tile[len(tile) // 2:len(tile)])
-            collidable = True
-            if sheet_pos == (6, 15):
-                collidable = False
-
-            game_objects.append(Tile(collidable, tiles[sheet_pos], x * 16, y * 16, batch=foreground))
-        x += 1
-    y += 1
+game_objects.extend(change_map(tiles, foreground, game_map))
 
 CURRENT_SCALE_WIDTH = 1
 CURRENT_SCALE_HEIGHT = 1
@@ -89,6 +74,19 @@ def on_mouse_motion(x, y, dx, dy):
 @window.event
 def on_mouse_press(x, y, dx, dy):
     game_objects.append(Projectile(cursor.x, cursor.y, player.x, player.y, batch=entities))
+
+
+def on_key_press(symbol, modifiers):
+    global current_level
+    global game_objects
+    if symbol == key.UP and player.can_proceed:
+        next_level = load_map(f'level{current_level + 1}')
+        game_objects = reset_map(game_objects)
+        game_objects.extend(change_map(tiles, foreground, next_level))
+        current_level += 1
+
+
+window.push_handlers(on_key_press)
 
 
 def update(dt):

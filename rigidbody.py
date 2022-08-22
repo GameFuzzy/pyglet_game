@@ -56,19 +56,19 @@ class RigidBody(pyglet.sprite.Sprite):
 
             if self.top(self.old_y) <= other_object.bottom(other_object.y) <= self.top(self.y):
                 # Top
-                return True, 0, 1
+                return True, 0, 1, other_object.__class__
             elif self.bottom(self.old_y) >= other_object.top(other_object.y) >= self.bottom(self.y):
                 # Bottom
-                return True, 0, -1
+                return True, 0, -1, other_object.__class__
 
             elif self.right(self.old_x) <= other_object.left(other_object.x) <= self.right(self.x):
                 # Right
-                return True, 1, 0
+                return True, 1, 0, other_object.__class__
             elif self.left(self.old_x) >= other_object.right(other_object.x) >= self.left(self.x):
                 # Left
-                return True, -1, 0
+                return True, -1, 0, other_object.__class__
 
-        return False, 0, 0
+        return False, 0, 0, other_object.__class__
 
     @abc.abstractmethod
     def handle_collision_with(self, other_object, x, y):
