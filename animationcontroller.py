@@ -16,18 +16,18 @@ class AnimationController:
             center_image(image)
 
         self.animations = {
-            'StillLeft': pyglet.image.Animation.from_image_sequence(sprites[46:47:1], 0.1).get_transform(True),
-            'StillRight': pyglet.image.Animation.from_image_sequence(sprites[46:47:1], 0.1),
-            'RunLeft': pyglet.image.Animation.from_image_sequence(sprites[60:64:1], 0.1).get_transform(True),
-            'RunRight': pyglet.image.Animation.from_image_sequence(sprites[60:64:1], 0.1),
-            'JumpPreparationLeft': pyglet.image.Animation.from_image_sequence(sprites[50:51:1], 0.1).get_transform(True),
-            'JumpPreparationRight': pyglet.image.Animation.from_image_sequence(sprites[50:51:1], 0.1),
-            'JumpUpLeft': pyglet.image.Animation.from_image_sequence(sprites[51:52:1], 0.1).get_transform(True),
-            'JumpUpRight': pyglet.image.Animation.from_image_sequence(sprites[51:52:1], 0.1),
-            'FallLeft': pyglet.image.Animation.from_image_sequence(sprites[53:54:1], 0.1).get_transform(True),
-            'FallRight': pyglet.image.Animation.from_image_sequence(sprites[53:54:1], 0.1),
-            'LandingLeft': pyglet.image.Animation.from_image_sequence(sprites[54:55:1], 0.1).get_transform(True),
-            'LandingRight': pyglet.image.Animation.from_image_sequence(sprites[54:55:1], 0.1)
+            'StillLeft': pyglet.image.Animation.from_image_sequence(sprites[46:47], 0.1).get_transform(True),
+            'StillRight': pyglet.image.Animation.from_image_sequence(sprites[46:47], 0.1),
+            'RunLeft': pyglet.image.Animation.from_image_sequence(sprites[60:64], 0.1).get_transform(True),
+            'RunRight': pyglet.image.Animation.from_image_sequence(sprites[60:64], 0.1),
+            'JumpPreparationLeft': pyglet.image.Animation.from_image_sequence(sprites[50:51], 0.1).get_transform(True),
+            'JumpPreparationRight': pyglet.image.Animation.from_image_sequence(sprites[50:51], 0.1),
+            'JumpUpLeft': pyglet.image.Animation.from_image_sequence(sprites[51:52], 0.1).get_transform(True),
+            'JumpUpRight': pyglet.image.Animation.from_image_sequence(sprites[51:52], 0.1),
+            'FallLeft': pyglet.image.Animation.from_image_sequence(sprites[53:54], 0.1).get_transform(True),
+            'FallRight': pyglet.image.Animation.from_image_sequence(sprites[53:54], 0.1),
+            'LandingLeft': pyglet.image.Animation.from_image_sequence(sprites[54:55], 0.1).get_transform(True),
+            'LandingRight': pyglet.image.Animation.from_image_sequence(sprites[54:55], 0.1)
         }
 
         self.current_animation = 'StillRight'

@@ -1,9 +1,12 @@
 from pyglet.gl import *
 from pyglet.window import Window, key
+
+from enemy import Enemy
 from player import Player
 from projectile import Projectile
 from resources import sheet_image, cursor_image
-from util import load_map, reset_map, change_map
+from load import load_map, reset_map, change_map
+from tile import Tile
 
 glEnable(GL_TEXTURE_2D)
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
@@ -101,15 +104,18 @@ def update(dt):
         to_remove.delete()
         game_objects.remove(to_remove)
 
-    # for i in range(1, len(game_objects)):
-    #     for j in range(i + 1, len(game_objects)):
-    #         obj_1 = game_objects[i]
-    #         obj_2 = game_objects[j]
-    #         collision_1 = obj_1.collision(obj_2)
-    #         collision_2 = obj_1.collision(obj_2)
-    #         if collision_1[0]:
-    #             obj_1.handle_collision_with(obj_2, collision_1[1], collision_1[2])
-    #             obj_2.handle_collision_with(obj_1, collision_2[1], collision_2[2])
+    for enemy in [obj for obj in game_objects if obj.__class__ == Enemy]:
+        if enemy.__class__ == Player:
+            continue
+        enemy_collisions = []
+        for i in range(0, len(game_objects)):
+            other_obj = game_objects[i]
+            enemy_collisions.append(enemy.collision(other_obj))
+            if enemy_collisions[i][0]:
+                enemy.handle_collision_with(other_obj, enemy_collisions[i][1], enemy_collisions[i][2])
+        if not any(map(lambda collision: collision[3] == Tile and collision[2], enemy_collisions)):
+            enemy.turn()
+
 
     player_collisions = []
     for i in range(1, len(game_objects)):
