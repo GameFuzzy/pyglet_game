@@ -2,7 +2,6 @@ from pyglet.window import key
 from animationcontroller import AnimationController
 from portal import Portal
 from rigidbody import RigidBody
-from util import load_map, change_map, reset_map
 
 
 class Player(RigidBody):

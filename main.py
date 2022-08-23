@@ -1,10 +1,8 @@
 from pyglet.gl import *
 from pyglet.window import Window, key
 from player import Player
-from portal import Portal
 from projectile import Projectile
 from resources import sheet_image, cursor_image
-from tile import Tile
 from util import load_map, reset_map, change_map
 
 glEnable(GL_TEXTURE_2D)

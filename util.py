@@ -1,5 +1,6 @@
 import math
 
+from enemy import Enemy
 from portal import Portal
 from tile import Tile
 
@@ -35,7 +36,10 @@ def change_map(tile_sprites, batch, game_map):
     for row in game_map:
         x = 0
         for tile in row:
-            if int(tile):
+            if tile == 'enm1':
+                collidable = False
+                tiles.append(Enemy(x * 16, y * 16, batch=batch))
+            elif int(tile):
                 sheet_pos = int(tile[:len(tile) // 2]), int(tile[len(tile) // 2:len(tile)])
                 collidable = True
                 obj_type = Tile
@@ -43,6 +47,7 @@ def change_map(tile_sprites, batch, game_map):
                     obj_type = Portal
 
                 tiles.append(obj_type(collidable, tile_sprites[sheet_pos], x * 16, y * 16, batch=batch))
+
             x += 1
         y += 1
     return tiles
