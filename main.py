@@ -18,8 +18,8 @@ window.set_exclusive_mouse(True)
 glClearColor(.3, .7, 1, 1)
 
 entities = pyglet.graphics.Batch()
-player = Player(WINDOW_TRUE_WIDTH, WINDOW_TRUE_HEIGHT, batch=entities)
 cursor = pyglet.sprite.Sprite(cursor_image, WINDOW_TRUE_WIDTH // 2, WINDOW_TRUE_HEIGHT // 2, batch=entities)
+player = Player(WINDOW_TRUE_WIDTH, WINDOW_TRUE_HEIGHT, cursor, batch=entities)
 
 game_objects = [player]
 
@@ -72,11 +72,6 @@ def on_mouse_motion(x, y, dx, dy):
         cursor.y += dy
 
 
-@window.event
-def on_mouse_press(x, y, dx, dy):
-    game_objects.append(Projectile(cursor.x, cursor.y, player.x, player.y, batch=entities))
-
-
 def on_key_press(symbol, modifiers):
     global current_level
     global game_objects
@@ -105,8 +100,6 @@ def update(dt):
         game_objects.remove(to_remove)
 
     for enemy in [obj for obj in game_objects if obj.__class__ == Enemy]:
-        if enemy.__class__ == Player:
-            continue
         enemy_collisions = []
         for i in range(0, len(game_objects)):
             other_obj = game_objects[i]
@@ -115,7 +108,14 @@ def update(dt):
                 enemy.handle_collision_with(other_obj, enemy_collisions[i][1], enemy_collisions[i][2])
         if not any(map(lambda collision: collision[3] == Tile and collision[2], enemy_collisions)):
             enemy.turn()
-
+            
+    for projectile in [obj for obj in game_objects if obj.__class__ == Projectile]:
+        projectile_collisions = []
+        for i in range(0, len(game_objects)):
+            other_obj = game_objects[i]
+            projectile_collisions.append(projectile.collision(other_obj))
+            if projectile_collisions[i][0]:
+                projectile.handle_collision_with(other_obj, projectile_collisions[i][1], projectile_collisions[i][2])
 
     player_collisions = []
     for i in range(1, len(game_objects)):

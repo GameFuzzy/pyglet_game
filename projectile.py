@@ -1,6 +1,7 @@
 import math
 import pyglet
 import resources
+from enemy import Enemy
 from rigidbody import RigidBody
 from util import center_image
 
@@ -14,7 +15,7 @@ class Projectile(RigidBody):
         for image in sprites:
             center_image(image)
 
-        sprite = pyglet.image.Animation.from_image_sequence(sprites, 0.1, False)
+        sprite = pyglet.image.Animation.from_image_sequence(sprites, 0.05, False)
 
         # sqrt((x - player_x)**2 + (y - player_y)**2) * k = 1
         dx = cursor_x - player_x
@@ -35,9 +36,7 @@ class Projectile(RigidBody):
 
         pyglet.clock.schedule_once(self.die, 0.5)
 
-    def die(self, dt):
-        self.dead = True
-
     def handle_collision_with(self, other_object, x, y):
-        """Handle collisions"""
-        return
+        self.die()
+        if other_object.__class__ == Enemy:
+            other_object.take_damage(1)

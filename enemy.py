@@ -22,6 +22,8 @@ class Enemy(rigidbody.RigidBody):
 
         self.velocity_x = 10
 
+        self.hp = 5
+
     def turn(self):
         if self.current_animation == 'Left':
             animation = 'Right'
@@ -33,3 +35,9 @@ class Enemy(rigidbody.RigidBody):
         self.current_animation = animation
         self.image = self.animations[animation]
         self.velocity_x = -self.velocity_x
+
+    def take_damage(self, hp):
+        if self.hp > 0:
+            self.hp -= hp
+        else:
+            self.die()

@@ -74,3 +74,6 @@ class RigidBody(pyglet.sprite.Sprite):
     def handle_collision_with(self, other_object, x, y):
         """Handle collisions"""
         return
+
+    def die(self, dt=0):
+        self.dead = True

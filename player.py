@@ -1,11 +1,14 @@
 from pyglet.window import key
 from animationcontroller import AnimationController
 from portal import Portal
+from projectile import Projectile
 from rigidbody import RigidBody
 
 
 class Player(RigidBody):
-    def __init__(self, window_width, window_height, *args, **kwargs):
+    def __init__(self, window_width, window_height, cursor, *args, **kwargs):
+
+        self.cursor = cursor
 
         self.current_level = 1
         self.can_proceed = False
@@ -99,6 +102,9 @@ class Player(RigidBody):
             self.gravity = True
         if symbol == key.RIGHT or symbol == key.LEFT:
             self.velocity_x = 0
+
+    def on_mouse_press(self, x, y, dx, dy):
+        self.new_objects.append(Projectile(self.cursor.x, self.cursor.y, self.x, self.y, batch=self.batch))
 
     def handle_collision_with(self, other_object, x, y):
         super(Player, self).handle_collision_with(other_object, x, y)
