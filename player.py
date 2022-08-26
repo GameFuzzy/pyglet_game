@@ -1,5 +1,7 @@
+import pyglet
 from pyglet.window import key
 from animationcontroller import AnimationController
+from enemy import Enemy
 from portal import Portal
 from projectile import Projectile
 from rigidbody import RigidBody
@@ -24,6 +26,8 @@ class Player(RigidBody):
 
         self.jump_charge = 0
         self.jump = 0
+
+        self.hp = 5
 
         self.key_handler = key.KeyStateHandler()
         self.event_handlers = [self, self.key_handler]
@@ -106,6 +110,16 @@ class Player(RigidBody):
     def on_mouse_press(self, x, y, dx, dy):
         self.new_objects.append(Projectile(self.cursor.x, self.cursor.y, self.x, self.y, batch=self.batch))
 
+    def set_saturation(self, dt, saturation):
+        self.color = (saturation, saturation, saturation)
+
+    def take_damage(self, hp):
+        if self.hp > 0:
+            self.set_saturation(0, saturation=200)
+            pyglet.clock.schedule_once(self.set_saturation, 0.2, saturation=255)
+            self.hp -= hp
+        else:
+            self.die()
     def handle_collision_with(self, other_object, x, y):
         super(Player, self).handle_collision_with(other_object, x, y)
 
@@ -115,6 +129,10 @@ class Player(RigidBody):
         if not other_object.collidable:
             if other_object.__class__ == Portal:
                 self.can_proceed = True
+            if other_object.__class__ == Enemy:
+                self.velocity_x *= -1
+                self.velocity_y *= -1
+                self.take_damage(1)
             return
 
         if x:

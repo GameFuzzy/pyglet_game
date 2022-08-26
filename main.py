@@ -110,12 +110,12 @@ def update(dt):
             enemy.turn()
             
     for projectile in [obj for obj in game_objects if obj.__class__ == Projectile]:
-        projectile_collisions = []
         for i in range(0, len(game_objects)):
             other_obj = game_objects[i]
-            projectile_collisions.append(projectile.collision(other_obj))
-            if projectile_collisions[i][0]:
-                projectile.handle_collision_with(other_obj, projectile_collisions[i][1], projectile_collisions[i][2])
+            projectile_collision = projectile.collision(other_obj)
+            if projectile_collision[0]:
+                projectile.handle_collision_with(other_obj, projectile_collision[1], projectile_collision[2])
+                break
 
     player_collisions = []
     for i in range(1, len(game_objects)):

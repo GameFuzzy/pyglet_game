@@ -36,8 +36,13 @@ class Enemy(rigidbody.RigidBody):
         self.image = self.animations[animation]
         self.velocity_x = -self.velocity_x
 
+    def set_saturation(self, dt, saturation):
+        self.color = (saturation, saturation, saturation)
+
     def take_damage(self, hp):
         if self.hp > 0:
+            self.set_saturation(0, saturation=200)
+            pyglet.clock.schedule_once(self.set_saturation, 0.2, saturation=255)
             self.hp -= hp
         else:
             self.die()

@@ -15,3 +15,6 @@ center_image(swoosh_image)
 
 cursor_image = pyglet.resource.image("cursor.png")
 center_image(cursor_image)
+
+particle_image = pyglet.resource.image("particle.png")
+center_image(particle_image)
