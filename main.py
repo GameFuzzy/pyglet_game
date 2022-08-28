@@ -162,8 +162,7 @@ def update(dt):
 
     for projectile in [obj for obj in game_objects if obj.__class__ == Projectile]:
         for other_obj in game_objects:
-            if (
-                    GameObject not in other_obj.__class__.__mro__ or not other_obj.collidable) and other_obj.__class__ != Enemy:
+            if (GameObject not in other_obj.__class__.__mro__ or not other_obj.collidable) and other_obj.__class__ != Enemy:
                 continue
             projectile_collision = projectile.collision(other_obj)
             if projectile_collision[0]:

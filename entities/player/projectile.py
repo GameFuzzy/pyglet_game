@@ -1,4 +1,5 @@
 import math
+import random
 import numpy as np
 import pyglet
 import resources
@@ -8,7 +9,7 @@ from vfx.particle import Particle
 from vfx.shockwave import Shockwave
 from resources import particle_image, enemy_hit_sound, ground_hit_sound
 from models.rigidbody import RigidBody
-from util import center_image
+from util import center_image, get_pixel_region
 
 
 class Projectile(RigidBody):
@@ -52,24 +53,60 @@ class Projectile(RigidBody):
         if (GameObject not in other_object.__class__.__mro__ or not other_object.collidable) and particles:
             return
 
+        colors = None
+
         normal = np.array([-x, -y])
         if x == 1:
-            self.die(0, particles, True, normal, other_object.left(other_object.x), self.y)
-        if x == -1:
-            self.die(0, particles, True, normal, other_object.right(other_object.x), self.y)
-        if y == 1:
-            self.die(0, particles, True, normal, self.x, other_object.bottom(other_object.y))
-        if y == -1:
-            self.die(0, particles, True, normal, self.x, other_object.top(other_object.y))
+            if particles:
+                line = get_pixel_region(other_object.image, 3, 0, 1, other_object.height)
 
-    def die(self, dt=0, particles=True, shockwave=True, normal=np.array([0, 0]), x=0, y=0):
+                colors = [
+                    line[3],
+                    line[other_object.height // 2],
+                    line[other_object.height - 3]
+                ]
+            self.die(0, particles, True, normal, other_object.left(other_object.x), self.y, colors)
+        if x == -1:
+            if particles:
+                line = get_pixel_region(other_object.image, other_object.width - 3, 0, 1, other_object.height)
+
+                colors = [
+                    line[3],
+                    line[other_object.height // 2],
+                    line[other_object.height - 5]
+                ]
+            self.die(0, particles, True, normal, other_object.right(other_object.x), self.y, colors)
+        if y == 1:
+            if particles:
+                line = get_pixel_region(other_object.image, 0, 3, other_object.width, 1)
+
+                colors = [
+                    line[3],
+                    line[other_object.width // 2],
+                    line[other_object.width - 3]
+                ]
+            self.die(0, particles, True, normal, self.x, other_object.bottom(other_object.y), colors)
+        if y == -1:
+            if particles:
+                line = get_pixel_region(other_object.image, 0, other_object.height - 3, other_object.width, 1)
+
+                colors = [
+                    line[3],
+                    line[other_object.width // 2],
+                    line[other_object.width - 3]
+                ]
+            self.die(0, particles, True, normal, self.x, other_object.top(other_object.y), colors)
+
+    def die(self, dt=0, particles=True, shockwave=True, normal=np.array([0, 0]), x=0, y=0, colors=None):
         if particles:
             ground_hit_sound.play()
             # r=d−2(d⋅n)n
             direction = np.array([math.cos(-math.radians(self.rotation)), math.sin(math.radians(-self.rotation))])
             reflection = direction - 2 * np.dot(direction, normal) * normal
             for i in range(0, 100):
-                self.new_objects.append(Particle(reflection[0], reflection[1], particle_image, x, y, batch=self.batch))
+                self.new_objects.append(
+                    Particle(reflection[0], reflection[1], random.choice(colors), particle_image, x, y,
+                             batch=self.batch))
         if shockwave:
             self.new_objects.append(Shockwave(x, y, batch=self.batch))
 
