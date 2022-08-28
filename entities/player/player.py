@@ -46,6 +46,9 @@ class Player(RigidBody):
             self.velocity_x = 0
             self.ground_contact_frame = True
 
+        if not self.gravity:
+            self.velocity_x /= 2
+
         if self.gravity:
             self.ground_contact_frame = False
 
