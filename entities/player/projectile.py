@@ -31,7 +31,7 @@ class Projectile(RigidBody):
 
         super(Projectile, self).__init__(False, sprite, player_x, player_y, *args, **kwargs)
 
-        self.scale = 0.5
+        self.scale = 0.7
 
         self.velocity_x = dx / k * 500
         self.velocity_y = dy / k * 500

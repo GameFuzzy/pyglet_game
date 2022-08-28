@@ -4,7 +4,7 @@ from entities.enemy import Enemy
 from entities.player import Player, Projectile
 from models import GameObject
 from tiles import Portal, Tile
-from resources import sheet_image, cursor_image
+from resources import sheet_image, cursor_image, bgm
 from maps.load import load_map, reset_map, change_map
 
 glEnable(GL_TEXTURE_2D)
@@ -41,6 +41,10 @@ CURRENT_SCALE_HEIGHT = 1
 current_scroll = [0, 0]
 scroll = [0, 0]
 
+bgm = bgm.play()
+
+bgm.loop = True
+bgm.volume = 0.5
 
 @window.event
 def on_resize(width, height):

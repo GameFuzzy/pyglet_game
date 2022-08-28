@@ -119,6 +119,10 @@ class Player(RigidBody):
 
     def on_mouse_press(self, x, y, dx, dy):
         self.new_objects.append(Projectile(self.cursor.x, self.cursor.y, self.x, self.y, batch=self.batch))
+        if self.cursor.x > self.x:
+            self.animation_controller.play(direction='Right')
+        elif self.cursor.x < self.x:
+            self.animation_controller.play(direction='Left')
 
     def toggle_invincibility(self, dt=0):
         if self.invincible:
