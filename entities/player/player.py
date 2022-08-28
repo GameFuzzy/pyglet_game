@@ -1,3 +1,4 @@
+import math
 import pyglet
 from pyglet.window import key
 from entities.player import AnimationController, Projectile
@@ -25,8 +26,9 @@ class Player(RigidBody):
                                      window_height // 2, *args, **kwargs)
         self.animation_controller.current_animation = 'StillRight'
 
-        self.jump_charge = 0
+        self.jump_charge = 100
         self.jump = 0
+        self.boost_counter = 0
 
         self.ground_contact_frame = False
 
@@ -55,7 +57,7 @@ class Player(RigidBody):
                 self.animation_controller.play(direction='Right')
             elif left and not right:
                 self.animation_controller.play(direction='Left')
-            if self.jump_charge < 500:
+            if self.jump_charge < 300:
                 self.jump_charge += 1000 * dt
 
         elif right and not left and not self.gravity:
@@ -111,9 +113,8 @@ class Player(RigidBody):
             if self.jump != 2:
                 self.velocity_x = self.jump * 200
             jump_sound.play()
-            self.jump_charge = 0
+            self.jump_charge = 100
             self.jump = 0
-            self.gravity = True
         if (symbol == key.RIGHT or symbol == key.D or symbol == key.LEFT or symbol == key.A) and not self.gravity:
             self.velocity_x = 0
 
@@ -123,6 +124,16 @@ class Player(RigidBody):
             self.animation_controller.play(direction='Right')
         elif self.cursor.x < self.x:
             self.animation_controller.play(direction='Left')
+        if self.boost_counter < 2:
+            # sqrt((x - player_x)**2 + (y - player_y)**2) * k = 1
+            dx = self.cursor.x - self.x
+            dy = self.cursor.y - self.y
+
+            # Normalization factor
+            k = math.sqrt(dx ** 2 + dy ** 2)
+            self.velocity_x = -dx / k * 500
+            self.velocity_y = -dy / k * 500
+            self.boost_counter += 1
 
     def toggle_invincibility(self, dt=0):
         if self.invincible:
@@ -174,5 +185,6 @@ class Player(RigidBody):
             else:
                 # Bottom
                 self.gravity = False
+                self.boost_counter = 0
                 self.animation_controller.play('Landing')
                 self.y = other_object.top(other_object.y) + self.height // 2

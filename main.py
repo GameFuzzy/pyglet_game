@@ -110,6 +110,8 @@ def update(dt):
     to_add = []
 
     if player.dead and not game_over:
+        scroll[0] = 0
+        scroll[1] = 0
         game_over = True
         cursor.visible = False
         window.pop_handlers()
