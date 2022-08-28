@@ -30,8 +30,6 @@ class Player(RigidBody):
         self.jump = 0
         self.boost_counter = 0
 
-        self.ground_contact_frame = False
-
         self.hp = 5
         self.invincible = False
 
@@ -42,15 +40,11 @@ class Player(RigidBody):
 
         super(Player, self).update(dt)
 
-        if not self.gravity and not self.ground_contact_frame:
-            self.velocity_x = 0
-            self.ground_contact_frame = True
-
         if not self.gravity:
-            self.velocity_x /= 2
-
-        if self.gravity:
-            self.ground_contact_frame = False
+            if -0.1 > self.velocity_x > 0.1:
+                self.velocity_x = 0
+            else:
+                self.velocity_x *= 0.6
 
         left = self.key_handler[key.LEFT] or self.key_handler[key.A]
         right = self.key_handler[key.RIGHT] or self.key_handler[key.D]
@@ -118,8 +112,6 @@ class Player(RigidBody):
             jump_sound.play()
             self.jump_charge = 100
             self.jump = 0
-        if (symbol == key.RIGHT or symbol == key.D or symbol == key.LEFT or symbol == key.A) and not self.gravity:
-            self.velocity_x = 0
 
     def on_mouse_press(self, x, y, dx, dy):
         self.new_objects.append(Projectile(self.cursor.x, self.cursor.y, self.x, self.y, batch=self.batch))
