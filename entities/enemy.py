@@ -1,10 +1,10 @@
 import pyglet
 import resources
-import rigidbody
+from models import RigidBody
 from util import center_image
 
 
-class Enemy(rigidbody.RigidBody):
+class Enemy(RigidBody):
     def __init__(self, *args, **kwargs):
         sprite_sheet = resources.player_image
         sprites = pyglet.image.ImageGrid(sprite_sheet, rows=4, columns=23)
@@ -46,3 +46,4 @@ class Enemy(rigidbody.RigidBody):
             self.hp -= hp
         else:
             self.die()
+            pyglet.clock.unschedule(self.set_saturation)

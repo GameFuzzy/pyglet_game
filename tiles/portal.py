@@ -1,4 +1,4 @@
-from tile import Tile
+from . import Tile
 
 
 class Portal(Tile):

@@ -1,13 +1,11 @@
-import random
-
 import pyglet
-
-from rigidbody import RigidBody
+from models.rigidbody import RigidBody
+import random
 
 
 class Particle(RigidBody):
     def __init__(self, velocity_x, velocity_y, *args, **kwargs):
-        super(Particle, self).__init__(*args, **kwargs)
+        super(Particle, self).__init__(False, *args, **kwargs)
 
         self.velocity_x = velocity_x * 200 + random.randint(-50, 50)
         self.velocity_y = velocity_y * 200 + random.randint(-50, 50)
