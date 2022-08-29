@@ -5,7 +5,7 @@ from . import AnimationController, Projectile
 from entities.enemy import Enemy
 from models.gameobject import GameObject
 from tiles import Portal
-from load.resources import jump_sound
+from load.resources import jump_sound, player_hit_sound, health_image
 from models.rigidbody import RigidBody
 
 
@@ -43,6 +43,12 @@ class Player(RigidBody):
 
         self.key_handler = key.KeyStateHandler()
         self.event_handlers = [self, self.key_handler]
+
+        self.hp_scale = 0.7
+
+        self.health_bar = [GameObject(False, health_image, x * 32 * self.hp_scale, window_height - 32 * self.hp_scale, batch=self.batch) for x in range(self.hp)]
+        for hp in self.health_bar:
+            hp.scale = self.hp_scale
 
     def update(self, dt):
 
@@ -148,10 +154,16 @@ class Player(RigidBody):
     def set_saturation(self, dt, saturation):
         self.color = (saturation, saturation, saturation)
 
+    def remove_hp(self, dt):
+        self.health_bar.pop()
+
     def take_damage(self, hp):
-        if self.hp > 0:
+        self.health_bar[-1].color = (200, 200, 200)
+        pyglet.clock.schedule_once(self.remove_hp, 0.2)
+        if self.hp > hp:
             self.toggle_invincibility()
             pyglet.clock.schedule_once(self.toggle_invincibility, 0.5)
+            player_hit_sound.play()
             self.hp -= hp
         else:
             self.die()

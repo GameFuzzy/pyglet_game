@@ -11,6 +11,8 @@ player_image = pyglet.resource.image('sprites/characters.png')
 
 sheet_image = pyglet.resource.image('sprites/sheet.png')
 
+health_image = pyglet.resource.image('sprites/health.png')
+
 swoosh_image = pyglet.resource.image('sprites/swoosh.png')
 center_image(swoosh_image)
 
@@ -24,6 +26,7 @@ shockwave_image = pyglet.resource.image('sprites/shockwave.png')
 center_image(shockwave_image)
 
 # Media
+player_hit_sound = pyglet.resource.media('sfx/player_hit.wav', False)
 enemy_hit_sound = pyglet.resource.media('sfx/enemy_hit.wav', False)
 ground_hit_sound = pyglet.resource.media('sfx/ground_hit.wav', False)
 jump_sound = pyglet.resource.media('sfx/jump.wav', False)
