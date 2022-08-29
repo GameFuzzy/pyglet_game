@@ -1,6 +1,6 @@
 import abc
 from . import GameObject
-from src.tiles import Tile
+from tiles import Tile
 
 
 class RigidBody(GameObject):
@@ -14,9 +14,6 @@ class RigidBody(GameObject):
         self.velocity_x, self.velocity_y = 0.0, 0.0
 
         self.gravity = False
-
-        self.original_x = self.x
-        self.original_y = self.y
 
         self.old_x = self.x
         self.old_y = self.y

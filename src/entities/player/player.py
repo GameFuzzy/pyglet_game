@@ -87,14 +87,14 @@ class Player(RigidBody):
         max_x = self.window_width - self.width / 2
         max_y = self.window_height - self.height / 2
         if self.x < min_x:
-            self.x = min_x
+            self.x = min_x + 1
             self.velocity_x = 0
         elif self.x > max_x:
-            self.x = max_x
+            self.x = max_x - 1
         if self.y < min_y:
-            self.y = min_y
+            self.y = min_y + 1
         elif self.y > max_y:
-            self.y = max_y
+            self.y = max_y - 1
             self.velocity_y = 0
 
     def on_key_press(self, symbol, modifiers):
@@ -149,8 +149,6 @@ class Player(RigidBody):
         self.color = (saturation, saturation, saturation)
 
     def take_damage(self, hp):
-        if self.invincible:
-            return
         if self.hp > 0:
             self.toggle_invincibility()
             pyglet.clock.schedule_once(self.toggle_invincibility, 0.5)
@@ -167,18 +165,26 @@ class Player(RigidBody):
         if not other_object.collidable:
             if other_object.__class__ == Portal:
                 self.can_proceed = True
-            if other_object.__class__ == Enemy:
+            if other_object.__class__ == Enemy and not self.invincible:
                 self.take_damage(1)
+                if x or y:
+                    self.velocity_y = 200
+                    self.gravity = True
+                    if math.fabs(self.velocity_x) >= 100:
+                        self.velocity_x = -self.velocity_x
+                    else:
+                        self.velocity_x = 100
             return
 
         if x:
             self.velocity_x = 0
+
             if x == 1:
                 # Right
-                self.x = other_object.left(other_object.x) - self.width // 2
+                self.x = other_object.left(other_object.x) - self.width // 2 - 1
             else:
                 # Left
-                self.x = other_object.right(other_object.x) + self.width // 2
+                self.x = other_object.right(other_object.x) + self.width // 2 + 1
         else:
             self.velocity_y = 0
 

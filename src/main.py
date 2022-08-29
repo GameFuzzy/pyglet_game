@@ -110,6 +110,7 @@ def update(dt):
     to_add = []
 
     if player.dead and not game_over:
+        pyglet.clock.unschedule(player.animation_controller.change_animation)
         scroll[0] = 0
         scroll[1] = 0
         game_over = True
@@ -123,23 +124,27 @@ def update(dt):
                           font_size=36,
                           x=WINDOW_TRUE_WIDTH // 2, y=WINDOW_TRUE_HEIGHT // 2,
                           anchor_x='center', anchor_y='center', batch=foreground)
-        return
 
-    if player.x - current_scroll[0] > WINDOW_TRUE_WIDTH * 1.5 - 36:
-        scroll[0] = 5 * dt * (round(current_scroll[0]) + WINDOW_TRUE_WIDTH - 36)
-    elif player.x - current_scroll[0] < WINDOW_TRUE_WIDTH * 0.5:
-        scroll[0] = 5 * dt * (round(current_scroll[0]))
+    if round(player.x) - current_scroll[0] > WINDOW_TRUE_WIDTH * 1.5 - 20:
+        scroll[0] = 5 * (round(current_scroll[0]) + WINDOW_TRUE_WIDTH - 20)
+    elif round(player.x) - current_scroll[0] < WINDOW_TRUE_WIDTH * 0.5:
+        scroll[0] = 5 * (round(current_scroll[0]))
     else:
-        scroll[0] = 5 * dt * -(WINDOW_TRUE_WIDTH // 2 - round(player.x))
+        scroll[0] = 5 * -(WINDOW_TRUE_WIDTH // 2 - round(player.x))
 
-    scroll[1] = -5 * dt * (WINDOW_TRUE_HEIGHT // 2 - round(player.y) - 39)
+    if round(player.y) - current_scroll[1] > WINDOW_TRUE_HEIGHT * 1.5 - 39:
+        scroll[1] = 5 * (round(current_scroll[1]) + WINDOW_TRUE_HEIGHT)
+    elif round(player.y) - current_scroll[1] < WINDOW_TRUE_HEIGHT * 0.5 - 39:
+        scroll[1] = 5 * round(current_scroll[1])
+    else:
+        scroll[1] = -5 * (WINDOW_TRUE_HEIGHT // 2 - 39 - round(player.y))
 
-    current_scroll[0] -= scroll[0]
-    current_scroll[1] -= scroll[1]
+    current_scroll[0] -= scroll[0] * dt
+    current_scroll[1] -= scroll[1] * dt
 
     for obj in game_objects:
-        obj.x -= scroll[0]
-        obj.y -= scroll[1]
+        obj.x -= scroll[0] * dt
+        obj.y -= scroll[1] * dt
         obj.update(dt)
         to_add.extend(obj.new_objects)
         obj.new_objects = []
@@ -157,7 +162,7 @@ def update(dt):
             enemy_collisions.append(enemy.collision(other_obj))
             if enemy_collisions[i][0]:
                 enemy.handle_collision_with(other_obj, enemy_collisions[i][1], enemy_collisions[i][2])
-        if not any(map(lambda collision: collision[3] == Tile and collision[2], enemy_collisions)):
+        if len([collision for collision in enemy_collisions if collision[3] == Tile and collision[2] == -1]) < 3:
             enemy.turn()
 
     for projectile in [obj for obj in game_objects if obj.__class__ == Projectile]:
@@ -176,9 +181,9 @@ def update(dt):
         player_collisions.append(player.collision(game_objects[i]))
         if player_collisions[i - 1][0]:
             player.handle_collision_with(game_objects[i], player_collisions[i - 1][1], player_collisions[i - 1][2])
-    if not player.gravity and not any(map(lambda collision: collision[2], player_collisions)):
+    if not player.gravity and not any(map(lambda collision: collision[2] == -1, player_collisions)):
         player.gravity = True
-    if not any(map(lambda collision: collision[3] == Portal and collision[0], player_collisions)):
+    if not any([collision for collision in player_collisions if collision[3] == Portal and collision[0]]):
         player.can_proceed = False
 
     for obj in to_add:

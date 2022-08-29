@@ -1,6 +1,6 @@
-from src.entities.enemy import Enemy
-from src.tiles.portal import Portal
-from src.tiles import Tile
+from entities.enemy import Enemy
+from tiles.portal import Portal
+from tiles import Tile
 
 
 def load_map(path):

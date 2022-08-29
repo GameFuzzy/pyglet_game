@@ -3,13 +3,13 @@ import random
 import numpy as np
 import pyglet
 from load import resources
-from src.entities.enemy import Enemy
-from src.models.gameobject import GameObject
-from src.vfx.particle import Particle
-from src.vfx.shockwave import Shockwave
+from entities.enemy import Enemy
+from models.gameobject import GameObject
+from vfx.particle import Particle
+from vfx.shockwave import Shockwave
 from load.resources import particle_image, enemy_hit_sound, ground_hit_sound
-from src.models.rigidbody import RigidBody
-from src.util import center_image, get_pixel_region
+from models.rigidbody import RigidBody
+from util import center_image, get_pixel_region
 
 
 class Projectile(RigidBody):

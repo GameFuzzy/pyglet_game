@@ -1,5 +1,5 @@
 import pyglet
-from src.models.rigidbody import RigidBody
+from models.rigidbody import RigidBody
 import random
 
 
