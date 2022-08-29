@@ -2,19 +2,19 @@ import math
 import random
 import numpy as np
 import pyglet
-import resources
-from entities.enemy import Enemy
-from models.gameobject import GameObject
-from vfx.particle import Particle
-from vfx.shockwave import Shockwave
-from resources import particle_image, enemy_hit_sound, ground_hit_sound
-from models.rigidbody import RigidBody
-from util import center_image, get_pixel_region
+from load import resources
+from src.entities.enemy import Enemy
+from src.models.gameobject import GameObject
+from src.vfx.particle import Particle
+from src.vfx.shockwave import Shockwave
+from load.resources import particle_image, enemy_hit_sound, ground_hit_sound
+from src.models.rigidbody import RigidBody
+from src.util import center_image, get_pixel_region
 
 
 class Projectile(RigidBody):
 
-    def __init__(self, cursor_x, cursor_y, player_x, player_y, *args, **kwargs):
+    def __init__(self, cursor_x, cursor_y, player_x, player_y, damage=1, *args, **kwargs):
         sprite_sheet = resources.swoosh_image
         sprites = pyglet.image.ImageGrid(sprite_sheet, rows=1, columns=4)
 
@@ -34,6 +34,8 @@ class Projectile(RigidBody):
 
         self.scale = 0.7
 
+        self.damage = damage
+
         self.velocity_x = dx / k * 500
         self.velocity_y = dy / k * 500
 
@@ -47,7 +49,7 @@ class Projectile(RigidBody):
     def handle_collision_with(self, other_object, x, y):
         particles = True
         if other_object.__class__ == Enemy:
-            other_object.take_damage(1)
+            other_object.take_damage(self.damage)
             particles = False
 
         if (GameObject not in other_object.__class__.__mro__ or not other_object.collidable) and particles:
@@ -66,7 +68,7 @@ class Projectile(RigidBody):
                     line[other_object.height - 3]
                 ]
             self.die(0, particles, True, normal, other_object.left(other_object.x), self.y, colors)
-        if x == -1:
+        elif x == -1:
             if particles:
                 line = get_pixel_region(other_object.image, other_object.width - 3, 0, 1, other_object.height)
 
@@ -76,7 +78,7 @@ class Projectile(RigidBody):
                     line[other_object.height - 5]
                 ]
             self.die(0, particles, True, normal, other_object.right(other_object.x), self.y, colors)
-        if y == 1:
+        elif y == 1:
             if particles:
                 line = get_pixel_region(other_object.image, 0, 3, other_object.width, 1)
 
@@ -86,7 +88,7 @@ class Projectile(RigidBody):
                     line[other_object.width - 3]
                 ]
             self.die(0, particles, True, normal, self.x, other_object.bottom(other_object.y), colors)
-        if y == -1:
+        elif y == -1:
             if particles:
                 line = get_pixel_region(other_object.image, 0, other_object.height - 3, other_object.width, 1)
 
@@ -96,6 +98,8 @@ class Projectile(RigidBody):
                     line[other_object.width - 3]
                 ]
             self.die(0, particles, True, normal, self.x, other_object.top(other_object.y), colors)
+        else:
+            self.die(0, False, True, normal, self.x, other_object.top(other_object.y), colors)
 
     def die(self, dt=0, particles=True, shockwave=True, normal=np.array([0, 0]), x=0, y=0, colors=None):
         if particles:

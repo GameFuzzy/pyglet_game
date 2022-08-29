@@ -1,7 +1,7 @@
 import pyglet
 
-import resources
-from util import center_image
+from load import resources
+from src.util import center_image
 
 
 class AnimationController:

@@ -1,8 +1,8 @@
 import pyglet
 
-import resources
-from models.gameobject import GameObject
-from util import center_image
+from load import resources
+from src.models.gameobject import GameObject
+from src.util import center_image
 
 
 class Shockwave(GameObject):

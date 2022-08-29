@@ -1,11 +1,11 @@
 import math
 import pyglet
 from pyglet.window import key
-from entities.player import AnimationController, Projectile
+from . import AnimationController, Projectile
 from entities.enemy import Enemy
 from models.gameobject import GameObject
 from tiles import Portal
-from resources import jump_sound
+from load.resources import jump_sound
 from models.rigidbody import RigidBody
 
 
@@ -26,9 +26,17 @@ class Player(RigidBody):
                                      window_height // 2, *args, **kwargs)
         self.animation_controller.current_animation = 'StillRight'
 
-        self.jump_charge = 100
+        self.min_jump = 100
+        self.max_jump = 300
+        self.jump_charge = self.min_jump
+        self.jump_charge_speed = 1000
         self.jump = 0
         self.boost_counter = 0
+
+        self.projectile_speed = 500
+
+        self.speed = 200
+        self.friction = 0.6
 
         self.hp = 5
         self.invincible = False
@@ -44,7 +52,7 @@ class Player(RigidBody):
             if -0.1 > self.velocity_x > 0.1:
                 self.velocity_x = 0
             else:
-                self.velocity_x *= 0.6
+                self.velocity_x *= self.friction
 
         left = self.key_handler[key.LEFT] or self.key_handler[key.A]
         right = self.key_handler[key.RIGHT] or self.key_handler[key.D]
@@ -54,16 +62,16 @@ class Player(RigidBody):
                 self.animation_controller.play(direction='Right')
             elif left and not right:
                 self.animation_controller.play(direction='Left')
-            if self.jump_charge < 300:
-                self.jump_charge += 1000 * dt
+            if self.jump_charge < self.max_jump:
+                self.jump_charge += self.jump_charge_speed * dt
 
         elif right and not left and not self.gravity:
             self.animation_controller.play(direction='Right')
-            self.velocity_x = 200
+            self.velocity_x = self.speed
 
         elif left and not right and not self.gravity:
             self.animation_controller.play(direction='Left')
-            self.velocity_x = -200
+            self.velocity_x = -self.speed
 
         else:
             self.animation_controller.play('Still')
@@ -108,9 +116,9 @@ class Player(RigidBody):
             elif left and not right:
                 self.jump = -1
             if self.jump != 2:
-                self.velocity_x = self.jump * 200
+                self.velocity_x = self.jump * self.speed
             jump_sound.play()
-            self.jump_charge = 100
+            self.jump_charge = self.min_jump
             self.jump = 0
 
     def on_mouse_press(self, x, y, dx, dy):
@@ -126,8 +134,8 @@ class Player(RigidBody):
 
             # Normalization factor
             k = math.sqrt(dx ** 2 + dy ** 2)
-            self.velocity_x = -dx / k * 500
-            self.velocity_y = -dy / k * 500
+            self.velocity_x = -dx / k * self.projectile_speed
+            self.velocity_y = -dy / k * self.projectile_speed
             self.boost_counter += 1
 
     def toggle_invincibility(self, dt=0):

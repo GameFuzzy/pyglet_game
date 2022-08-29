@@ -1,1 +1,0 @@
-from resources.resources import *

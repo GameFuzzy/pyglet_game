@@ -1,5 +1,5 @@
 import pyglet
-import resources
+from load import resources
 from models import RigidBody
 from util import center_image
 
@@ -22,7 +22,7 @@ class Enemy(RigidBody):
 
         self.velocity_x = 10
 
-        self.hp = 5
+        self.hp = 3
 
     def turn(self):
         if self.current_animation == 'Left':
@@ -40,7 +40,7 @@ class Enemy(RigidBody):
         self.color = (saturation, saturation, saturation)
 
     def take_damage(self, hp):
-        if self.hp > 0:
+        if self.hp > hp:
             self.set_saturation(0, saturation=200)
             pyglet.clock.schedule_once(self.set_saturation, 0.2, saturation=255)
             self.hp -= hp

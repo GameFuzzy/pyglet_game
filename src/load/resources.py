@@ -1,9 +1,9 @@
 import pyglet
 
-from util import center_image
+from src.util import center_image
 
-# Tell pyglet where to find the resources
-pyglet.resource.path = ['resources']
+# Tell pyglet where to find the data
+pyglet.resource.path = ['../data/resources']
 pyglet.resource.reindex()
 
 # Images

@@ -1,6 +1,6 @@
 import abc
 from . import GameObject
-from tiles import Tile
+from src.tiles import Tile
 
 
 class RigidBody(GameObject):
