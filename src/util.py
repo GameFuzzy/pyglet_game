@@ -1,4 +1,17 @@
 import math
+import os
+import sys
+
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 def distance(point_1=(0, 0), point_2=(0, 0)):
@@ -17,4 +30,4 @@ def get_pixel_region(image, x, y, width, height):
     img_data = image.get_region(x, y, width, height).get_image_data()
     width = img_data.width
     data = img_data.get_data('RGB', 3 * width)
-    return [(data[i], data[i+1], data[i+2]) for i in range(0, len(data), 3)]
+    return [(data[i], data[i + 1], data[i + 2]) for i in range(0, len(data), 3)]

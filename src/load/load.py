@@ -1,10 +1,11 @@
 from entities.enemy import Enemy
 from tiles.portal import Portal
 from tiles import Tile
+from util import resource_path
 
 
 def load_map(path):
-    filename = f'data/maps/{path}.map'
+    filename = resource_path(f'data/maps/{path}.map')
     with open(filename, "r") as fp:
         return list(map(lambda line: line[:-1].split(','), reversed(fp.read().splitlines())))
 

@@ -1,5 +1,4 @@
 import pyglet
-
 from load import resources
 from models.gameobject import GameObject
 from util import center_image
