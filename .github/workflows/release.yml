@@ -1,5 +1,7 @@
 on:
   push:
+    tags:
+      - "v*.*.*"
 
 jobs:
   build:
@@ -21,3 +23,17 @@ jobs:
       with:
         name: ${{ matrix.os }}
         path: dist/*
+  
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download all workflow run artifacts
+      uses: actions/download-artifact@v3
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          macos-latest
+          windows-latest
+          ubuntu-latest
