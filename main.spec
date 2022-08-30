@@ -28,7 +28,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='bruh game',
+    name='BruhGame',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
