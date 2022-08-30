@@ -34,6 +34,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          macos-latest/macos-latest
-          macos-latest/windows-latest
-          macos-latest/ubuntu-latest
+          pyglet_game/macos-latest/macos-latest
+          pyglet_game/windows-latest/windows-latest
+          pyglet_game/ubuntu-latest/ubuntu-latest
