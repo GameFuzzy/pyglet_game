@@ -30,10 +30,12 @@ jobs:
     steps:
     - name: Download all workflow run artifacts
       uses: actions/download-artifact@v3
+    - name: Rename executables
+      run: 'mv macos-latest/BruhGame BruhGame-macos-x86_64; mv windows-latest/BruhGame.exe BruhGame-win-x86_64.exe; mv ubuntu-latest/BruhGame BruhGame-ubuntu'
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          macos-latest/BruhGame
-          windows-latest/BruhGame.exe
-          ubuntu-latest/BruhGame
+          BruhGame-macos-x86_64
+          BruhGame-win-x86_64.exe
+          BruhGame-ubuntu
