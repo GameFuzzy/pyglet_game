@@ -57,6 +57,8 @@ class Projectile(RigidBody):
 
         colors = None
 
+        print('bruh')
+
         normal = np.array([-x, -y])
         if x == 1:
             if particles:

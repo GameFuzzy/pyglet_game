@@ -46,7 +46,8 @@ class Player(RigidBody):
 
         self.hp_scale = 0.7
 
-        self.health_bar = [GameObject(False, health_image, x * 32 * self.hp_scale, window_height - 32 * self.hp_scale, batch=self.batch) for x in range(self.hp)]
+        self.health_bar = [GameObject(False, health_image, x * 32 * self.hp_scale, window_height - 32 * self.hp_scale,
+                                      batch=self.batch) for x in range(self.hp)]
         for hp in self.health_bar:
             hp.scale = self.hp_scale
 
@@ -167,6 +168,9 @@ class Player(RigidBody):
             self.hp -= hp
         else:
             self.die()
+
+    def die(self, dt=0):
+        super().die(dt)
 
     def handle_collision_with(self, other_object, x, y):
         super(Player, self).handle_collision_with(other_object, x, y)

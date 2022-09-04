@@ -17,22 +17,25 @@ def reset_map(game_objects):
     return [obj for obj in game_objects if Tile not in obj.__class__.__mro__ and Enemy not in obj.__class__.__mro__]
 
 
-def change_map(tile_sprites, batch, game_map):
+def change_map(tile_sprites, batches, game_map):
     tiles = []
     y = 0
     for row in game_map:
         x = 0
         for tile in row:
             if tile == 'enemy_001':
-                tiles.append(Enemy(x * 16 + 16, y * 16 + 16, batch=batch))
+                # + 1 pixel to avoid enemy getting stuck
+                tiles.append(Enemy(x * 16 + 17, y * 16 + 16, batch=batches[0]))
                 x += 1
             elif int(tile):
+                collidable = True
+                batch = batches[0]
                 sheet_pos = int(tile[:len(tile) // 2]), int(tile[len(tile) // 2:len(tile)])
                 obj_type = Tile
                 if sheet_pos == (6, 15):
                     obj_type = Portal
 
-                tiles.append(obj_type(True, tile_sprites[sheet_pos], x * 16, y * 16, batch=batch))
+                tiles.append(obj_type(collidable, tile_sprites[sheet_pos], x * 16, y * 16, batch=batch))
 
             x += 1
         y += 1

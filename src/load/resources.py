@@ -24,6 +24,9 @@ center_image(particle_image)
 shockwave_image = pyglet.resource.image('sprites/shockwave.png')
 center_image(shockwave_image)
 
+button_01_image = pyglet.resource.image('sprites/button-01.png')
+center_image(button_01_image)
+
 # Media
 player_hit_sound = pyglet.resource.media('sfx/player_hit.wav', False)
 enemy_hit_sound = pyglet.resource.media('sfx/enemy_hit.wav', False)

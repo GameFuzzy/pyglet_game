@@ -7,6 +7,7 @@ class GameObject(pyglet.sprite.Sprite):
 
     def __init__(self, collidable=False, *args, **kwargs):
         super(GameObject, self).__init__(*args, **kwargs)
+        self.original_batch = self.batch
         self.collidable = collidable
         self.dead = False
 
