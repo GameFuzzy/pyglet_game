@@ -4,7 +4,7 @@ on:
       - "v*.*.*"
 
 jobs:
-  build:
+  bundle:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -25,17 +25,17 @@ jobs:
         path: dist/*
   
   release:
-    needs: build
+    needs: bundle
     runs-on: ubuntu-latest
     steps:
     - name: Download all workflow run artifacts
       uses: actions/download-artifact@v3
-    - name: Display structure of downloaded files
-      run: ls -R
+    - name: Rename executables
+      run: 'mv macos-latest/BruhGame BruhGame-macos-x86_64; mv windows-latest/BruhGame.exe BruhGame-win-x86_64.exe; mv ubuntu-latest/BruhGame BruhGame-ubuntu'
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          pyglet_game/pyglet_game/macos-latest/macos-latest
-          pyglet_game/pyglet_game/windows-latest/windows-latest
-          pyglet_game/pyglet_game/ubuntu-latest/ubuntu-latest
+          BruhGame-macos-x86_64
+          BruhGame-win-x86_64.exe
+          BruhGame-ubuntu
