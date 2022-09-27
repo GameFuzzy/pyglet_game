@@ -17,11 +17,11 @@ def reset_map(game_objects):
     return [obj for obj in game_objects if Tile not in obj.__class__.__mro__ and Enemy not in obj.__class__.__mro__]
 
 
-def change_map(tile_sprites, batches, game_map):
+def change_map(offset, tile_sprites, batches, game_map):
     tiles = []
-    y = 0
+    y = offset[1] / 16
     for row in game_map:
-        x = 0
+        x = offset[0] / 16
         for tile in row:
             if tile == 'enemy_001':
                 # + 1 pixel to avoid enemy getting stuck

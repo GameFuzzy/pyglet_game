@@ -42,7 +42,7 @@ class RigidBody(GameObject):
 
     def collision(self, other_object):
 
-        if RigidBody not in other_object.__class__.__mro__ and Tile not in other_object.__class__.__mro__:
+        if RigidBody not in other_object.__class__.__mro__ and Tile not in other_object.__class__.__mro__ or other_object.dead:
             return False, 0, 0, other_object.__class__
 
         if self.left(round(self.x)) <= other_object.right(round(other_object.x)) and \

@@ -3,18 +3,18 @@ import pyglet
 
 class Button(pyglet.sprite.Sprite):
 
-    def __init__(self, text, cursor, *args, **kwargs):
-        #TODO: Make this work consistently
-        pyglet.graphics.OrderedGroup(0, self.batch)
+    def __init__(self, text, cursor, text_batch, *args, scale=(1, 1), **kwargs):
         super(Button, self).__init__(*args, **kwargs)
         self.cursor = cursor
         self.text = pyglet.text.Label(text,
                                       font_name='Dogica Pixel',
                                       bold=True,
-                                      color=(255, 255, 255, 255),
-                                      font_size=16,
+                                      color=(230, 230, 230, 255),
+                                      dpi=100,
                                       x=self.x, y=self.y,
-                                      anchor_x='center', anchor_y='center', batch=self.batch)
+                                      anchor_x='center', anchor_y='center', batch=text_batch)
+        self.scale_x = scale[0]
+        self.scale_y = scale[1]
         self.action = text
         self.hover = False
         self.pressed = False
@@ -43,6 +43,9 @@ class Button(pyglet.sprite.Sprite):
             self.hover = True
         else:
             self.hover = False
+
+        if self.pressed:
+            self.pressed = False
 
         saturation = -self.hover * 55 + 200
 

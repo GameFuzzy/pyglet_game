@@ -1,6 +1,7 @@
 import math
 import os
 import sys
+from datetime import datetime
 
 
 def resource_path(relative_path):
@@ -27,7 +28,11 @@ def center_image(image):
 
 # TODO: Get rid of this since it is excruciatingly slow. Could be replaced with an inherent color property for each tile.
 def get_pixel_region(image, x, y, width, height):
+    t = datetime.now()
     img_data = image.get_region(x, y, width, height).get_image_data()
+    print('get_region:', (datetime.now() - t).microseconds, 'microseconds')
     width = img_data.width
+    t = datetime.now()
     data = img_data.get_data('RGB', 3 * width)
+    print('get_data:', (datetime.now() - t).microseconds, 'microseconds')
     return [(data[i], data[i + 1], data[i + 2]) for i in range(0, len(data), 3)]
